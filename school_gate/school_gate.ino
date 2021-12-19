@@ -5,11 +5,16 @@
 //NodeMCU--------------------------
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
+//ServoMotor--------------------------
+#include <Servo.h>
+
 //************************************************************************
 #define SS_PIN  D2  //D2
 #define RST_PIN D1  //D1
 //************************************************************************
 MFRC522 mfrc522(SS_PIN, RST_PIN); // Create MFRC522 instance.
+//************************************************************************
+Servo servo; //Creating Servo Instance
 //************************************************************************
 /* Set these to your desired credentials. */
 const char *ssid = "Kavita";
@@ -28,7 +33,10 @@ void setup() {
   Serial.begin(115200);
   SPI.begin();  // Init SPI bus
   mfrc522.PCD_Init(); // Init MFRC522 card
+  servo.attach(2); //D4
+  servo.write(0);//Setting the gate to starting position
   Serial.println(device_token);
+  pinMode(D0,OUTPUT);//Setup Buzzer
   //---------------------------------------------
   connectToWiFi();
 }
@@ -107,6 +115,27 @@ void SendCardID( String Card_uid ){
       else if (payload == "available") {
 
       }*/
+      if(payload != "Not Registered")
+      {
+        digitalWrite(D0,HIGH);
+        delay(50);
+        digitalWrite(D0,LOW);
+        delay(50);
+        digitalWrite(D0,HIGH);
+        delay(50);
+        digitalWrite(D0,LOW);
+        servo.write(180);
+        delay(1000);
+        servo.write(0);
+      }
+
+      else
+      {
+        servo.write(0);
+        digitalWrite(D0,HIGH);
+        delay(500);
+        digitalWrite(D0,LOW);
+      }
       delay(100);
       http.end();  //Close connection
     }
