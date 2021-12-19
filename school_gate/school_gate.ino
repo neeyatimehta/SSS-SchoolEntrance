@@ -28,6 +28,7 @@ void setup() {
   Serial.begin(115200);
   SPI.begin();  // Init SPI bus
   mfrc522.PCD_Init(); // Init MFRC522 card
+  Serial.println(device_token);
   //---------------------------------------------
   connectToWiFi();
 }
@@ -72,7 +73,7 @@ void loop() {
 }
 //************send the Card UID to the website*************
 void SendCardID( String Card_uid ){
-  Serial.println("Sending the Card ID");
+  //Serial.println("Sending the Card ID");
   if(WiFi.isConnected()){
     HTTPClient http;    //Declare object of class HTTPClient
     //GET Data
